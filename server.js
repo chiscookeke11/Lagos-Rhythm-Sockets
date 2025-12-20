@@ -6,8 +6,15 @@ const io = new Server(3001, {
     },
 });
 
+
+let usersCount = 0;
+
+
 io.on("connection", (socket) => {
-    console.log("User connected:", socket.id);
+    // console.log("User connected:", socket.id);
+    usersCount++;
+
+    io.emit("update-user-count", usersCount)
 
     socket.on("send-message", (data) => {
         // broadcast to everyone
@@ -15,6 +22,9 @@ io.on("connection", (socket) => {
     });
 
     socket.on("disconnect", () => {
-        console.log("User disconnected:", socket.id);
+        // console.log("User disconnected:", socket.id);
+        usersCount--;
+
+        io.emit("update-user-count", usersCount)
     });
 });
